@@ -9,13 +9,13 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link href="/profile">
+        <Link href="/pages/profile">
           <BiUserCircle className="icon" />
         </Link>
-        <Link href="/add">
+        <Link href="/pages/addblog">
           <BiPlus className="icon" />
         </Link>
-        <Link href="/search">
+        <Link href="/pages/search">
           <AiOutlineSearch className="icon" />
         </Link>
       </div>
