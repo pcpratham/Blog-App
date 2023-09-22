@@ -1,7 +1,7 @@
 "use client"
 import Navbar from '@/components/Navbar/Navbar'
 import Link from 'next/link'
-
+import "../auth.css"
 
 export default function Signup() {
   return (
@@ -10,7 +10,10 @@ export default function Signup() {
       <div className='authin'>
         <div className='left'></div>
         <div className='right'>
-            <form>
+            <form style={{
+              display:'flex',
+              flexDirection:'column'
+            }}>
                 <div className='forminput_cont'>
                     <label>Name</label>
                     <input type='text' placeholder='Enter Your Name'  />

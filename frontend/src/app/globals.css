@@ -1,5 +1,8 @@
 :root{
     --col1 : #FFDE59;
+    --col2: #1f1f1f;
+    --col1light: #ffde594c;
+    --errorcol: red;
 }
 
 *{
