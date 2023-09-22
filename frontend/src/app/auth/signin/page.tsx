@@ -24,7 +24,7 @@ export default function Signin() {
                     <input type='password' placeholder='Enter Password'  />
                 </div>
                 <button type='submit' className='main_button'>Sign-in</button>
-                <p>Don't have an account ? <Link href="/auth/signup">Register Here</Link> </p>
+                <p className='authlink'>Don't have an account ? <Link href="/auth/signup">Register Here</Link> </p>
             </form>
         </div>
       </div>

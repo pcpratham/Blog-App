@@ -31,7 +31,7 @@ export default function Signup() {
                     <input type='password' placeholder='Enter Password again'  />
                 </div>
                 <button type='submit' className='main_button'>Register</button>
-                <p>Already have an account ? <Link href="/auth/signin">Login</Link> </p>
+                <p className='authlink'>Already have an account ? <Link href="/auth/signin">Login</Link> </p>
             </form>
         </div>
       </div>

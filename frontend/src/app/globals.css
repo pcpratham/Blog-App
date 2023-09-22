@@ -10,6 +10,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.head1{
+  font-size:30px;
+  font-weight: 500;
+  font-family: sans-serif;
+  color: var(--col1);
+}
+
 .forminput_cont {
     display: flex;
     flex-direction: column;
