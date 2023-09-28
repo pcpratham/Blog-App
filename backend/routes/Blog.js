@@ -108,4 +108,40 @@ router.put('/:id',authTokenHandler,checkBlogOwnership,async (req,res)=>{
 })
 
 
+//search
+
+router.get('/',async (req,res) => {
+    try{
+        const search = req.body.search||'';
+        const page = parseInt(req.body.page) || 1;
+
+        const perPage = 2;
+
+        const searchQuery = new RegExp(search,'i');
+        const totalBlogs = await Blog.countDocuments({title:searchQuery});
+        const totalPages = Math.ceil(totalBlogs/perPage);
+
+        if(page<1 || page>totalPages){
+            return res.status(404).json({
+                message:"Invalid page number"
+            });
+        }
+
+        // to skip entries of page other than the entered page
+        const skip = (page-1)*perPage;
+        const blogs = await Blog.find({title:searchQuery}).sort({createdAt:-1}).skip(skip).limit(perPage);
+
+        res.status(200).json({
+            blogs,
+            totalPages,
+            currentPage:page,
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            message:err.message
+        });
+    }
+})
+
 module.exports = router;
