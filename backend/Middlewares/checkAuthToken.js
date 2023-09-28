@@ -11,8 +11,8 @@ function checkAuth(req, res, next) {
     const authToken = req.cookies.authToken;
     const refreshToken = req.cookies.refreshToken;
     console.log("check Auth token middleware called");
-    console.log("authToken: ",authToken);
-    console.log("refreshToken: ",refreshToken);
+    // console.log("authToken: ",authToken);
+    // console.log("refreshToken: ",refreshToken);
     if(!authToken || !refreshToken){
         return res.status(401).json({
             message: "Authentication failed: needed authToken and refreshToken"
