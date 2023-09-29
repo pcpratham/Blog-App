@@ -28,6 +28,10 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    category:{
+        type: String,
+        required: true
+    },
     paragraphs: {
         type:[paragraphSchema],
         default: []

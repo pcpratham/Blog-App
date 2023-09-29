@@ -35,8 +35,8 @@ router.get('/test',authTokenHandler, async (req, res) => {
 
 router.post('/',authTokenHandler, async (req, res) => {
     try{
-        const {title,description,image,paragraphs} = req.body;
-        const blog = new Blog({title,description,image,paragraphs,Owner:req.userId});
+        const {title,description,image,paragraphs,category} = req.body;
+        const blog = new Blog({title,description,image,paragraphs,category,Owner:req.userId});
         await blog.save();
 
         //user ke blog array me bhi daal do ye
@@ -83,10 +83,10 @@ router.get('/:id',async (req,res) => {
 
 router.put('/:id',authTokenHandler,checkBlogOwnership,async (req,res)=>{
     try{
-        const {title,description,image,paragraphs} = req.body;
+        const {title,description,image,paragraphs,category} = req.body;
         const updatedBlog = await Blog.findByIdAndUpdate(
             req.params.id,
-            {title,description,image,paragraphs},
+            {title,description,image,category,paragraphs},
             {new:true}
         )
         if(!updatedBlog){
