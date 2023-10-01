@@ -11,7 +11,21 @@ const blogRoutes = require("./routes/Blog");
 const imageUploadRoutes = require("./routes/imageUploadRoute");
 require("dotenv").config();
 app.use(bodyParser.json());
-app.use(cors());
+const allowedOrigins = ['http://localhost:3000']; // Add more origins as needed
+
+// Configure CORS with credentials
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true, // Allow credentials
+    })
+);
 app.use(cookieParser());
 app.use('/auth',authRoutes);
 app.use('/blog', blogRoutes);

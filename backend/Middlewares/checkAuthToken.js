@@ -15,6 +15,7 @@ function checkAuth(req, res, next) {
     // console.log("refreshToken: ",refreshToken);
     if(!authToken || !refreshToken){
         return res.status(401).json({
+            success: false,
             message: "Authentication failed: needed authToken and refreshToken"
         });
     }
@@ -25,6 +26,7 @@ function checkAuth(req, res, next) {
                 //refresh token is expired & auth token is expired
                 if(refreshErr){
                     return res.status(401).json({
+                        success: false,
                         message: "Authentication failed: refresh & auth token expired"
                     });
                 }

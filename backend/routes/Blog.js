@@ -10,12 +10,14 @@ const checkBlogOwnership = async (req, res, next) => {
         const blog = await Blog.findById(req.params.id);
         if(!blog){
             return res.status(404).json({
+                success:false,
                 message:"Blog not found"
             });
         }
 
         if(blog.Owner.toString()!== req.userId){
             return res.status(401).json({
+                success:false,
                 message:"Unauthorized to access this blog"
             });
         }
@@ -23,7 +25,7 @@ const checkBlogOwnership = async (req, res, next) => {
         next();
     }
     catch(err){
-        res.status(500).json({ message:err.message });
+        res.status(500).json({ success:false,message:err.message });
     }
 };
 
@@ -35,14 +37,15 @@ router.get('/test',authTokenHandler, async (req, res) => {
 
 router.post('/',authTokenHandler, async (req, res) => {
     try{
-        const {title,description,image,paragraphs,category} = req.body;
-        const blog = new Blog({title,description,image,paragraphs,category,Owner:req.userId});
+        const {title,description,imageUrl,paragraphs,category} = req.body;
+        const blog = new Blog({title,description,imageUrl,paragraphs,category,Owner:req.userId});
         await blog.save();
 
         //user ke blog array me bhi daal do ye
         const user = await User.findById(req.userId);
         if(!user){
             return res.status(404).json({
+                success:false,
                 message:"User not found",
                 blog
             });
@@ -51,12 +54,14 @@ router.post('/',authTokenHandler, async (req, res) => {
         user.blogs.push(blog._id);
         await user.save();
         res.status(201).json({
+            success:false,
             message:"Blog created successfully"
         });
     }
     catch(err){
         console.log(err);
         res.status(500).json({
+            success:false,
             message:"Error while creating blog"
         });
     }
@@ -67,15 +72,18 @@ router.get('/:id',async (req,res) => {
         const blog = await Blog.findById(req.params.id);
         if(!blog){
             return res.status(404).json({
+                success:false,
                 message:"Blog not found"
             });
         }
         res.status(200).json({
+            success:true,
             blog
         });
     }
     catch(err){
         res.status(500).json({
+            success:false,
             message:err.message
         });
     }
@@ -83,25 +91,28 @@ router.get('/:id',async (req,res) => {
 
 router.put('/:id',authTokenHandler,checkBlogOwnership,async (req,res)=>{
     try{
-        const {title,description,image,paragraphs,category} = req.body;
+        const {title,description,imageUrl,paragraphs,category} = req.body;
         const updatedBlog = await Blog.findByIdAndUpdate(
             req.params.id,
-            {title,description,image,category,paragraphs},
+            {title,description,imageUrl,category,paragraphs},
             {new:true}
         )
         if(!updatedBlog){
             return res.status(404).json({
+                success:false,
                 message:"Blog not found"
             });
         }
 
         res.status(200).json({
+            success:true,
             message:"Blog updated successfully",
             blog:updatedBlog
         });
     }
     catch(err){
         res.status(500).json({
+            success:false,
             message:err.message
         });
     }
@@ -123,6 +134,7 @@ router.get('/',async (req,res) => {
 
         if(page<1 || page>totalPages){
             return res.status(404).json({
+                success:false,
                 message:"Invalid page number"
             });
         }
@@ -132,6 +144,7 @@ router.get('/',async (req,res) => {
         const blogs = await Blog.find({title:searchQuery}).sort({createdAt:-1}).skip(skip).limit(perPage);
 
         res.status(200).json({
+            success:true,
             blogs,
             totalPages,
             currentPage:page,
@@ -139,6 +152,7 @@ router.get('/',async (req,res) => {
     }
     catch(err){
         res.status(500).json({
+            success:false,
             message:err.message
         });
     }

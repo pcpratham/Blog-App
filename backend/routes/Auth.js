@@ -5,7 +5,7 @@ const user = require("../models/UserSchema");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const errorHandler = require("../Middlewares/errorMiddleware");
-
+const authTokenHandler = require("../Middlewares/checkAuthToken");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -31,20 +31,20 @@ router.post("/sendotp", async (req, res, next) => {
       text: `Your OTP is ${otp}`,
     };
 
-    transporter.sendMail(mailOptions,async (err,info)=>{
-        if(err){
-            console.log(err);
-            res.status(500).json({
-                message: err.message
-            })
-        }
-        else{
-            res.json({
-                message: "Otp send successfully" , otp:otp
-            })
-        }
-    })
-
+    transporter.sendMail(mailOptions, async (err, info) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({
+          success: false,
+          message: err.message,
+        });
+      } else {
+        res.json({
+          message: "Otp send successfully",
+          otp: otp,
+        });
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -78,18 +78,23 @@ router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Please provide email and password" });
+      return res.status(400).json({
+        success: false,
+        message: "Please provide email and password",
+      });
     }
     const existingUser = await user.findOne({ email: email });
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid password" });
     }
 
     const authToken = jwt.sign(
@@ -106,6 +111,7 @@ router.post("/login", async (req, res, next) => {
     res.cookie("authToken", authToken, { httpOnly: true });
     res.cookie("refreshToken", refreshToken, { httpOnly: true });
     res.status(200).json({
+      success: true,
       message: "Login successful",
     });
   } catch (err) {
@@ -140,4 +146,11 @@ router.post("/login", async (req, res, next) => {
 //     }
 // })
 router.use(errorHandler);
+
+router.get("/checklogin", authTokenHandler, async (req, res) => {
+  res.json({
+    success: true,
+    message: "User authenticated successfully",
+  });
+});
 module.exports = router;
